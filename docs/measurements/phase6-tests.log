@@ -1,0 +1,119 @@
+Start testing: Sep 26 22:10 Pacific Daylight Time
+----------------------------------------------------------
+1/1 Testing: VocalisPhase6
+1/1 Test: VocalisPhase6
+Command: "C:/Users/Admin/Desktop/Vocalis/build/VocalisTests_artefacts/Release/VocalisTests.exe" "C:/Users/Admin/Desktop/Vocalis/build/Vocalis_artefacts/Release/VST3/Vocalis.vst3"
+Directory: C:/Users/Admin/Desktop/Vocalis/build
+"VocalisPhase6" start time: Sep 26 22:10 Pacific Daylight Time
+Output:
+----------------------------------------------------------
+Latency at 44100 Hz: 2180 samples
+Latency at 48000 Hz: 2368 samples
+Latency at 96000 Hz: 4672 samples
+Pitch frequency, variable buffers, zero null, automation and allocation checks passed; max step 0.0057679
+PASS: LIVE/QUALITY timing, dry/wet and both bypass paths, stereo sync
+Combined 44100 / 3 / 2: 4 cents
+Combined 44100 / -4 / -2: -6 cents
+Combined 44100 / 12 / 6: 20 cents
+Combined 44100 / -12 / -6: -19 cents
+Preserve centroids 704.021 -> 778.491, 707.785, 651.396
+Combined 44100 / 3 / 2: 4 cents
+Combined 44100 / -4 / -2: -6 cents
+Combined 44100 / 12 / 6: 20 cents
+Combined 44100 / -12 / -6: -19 cents
+Preserve centroids 704.021 -> 778.491, 707.785, 651.396
+Combined 48000 / 3 / 2: 6 cents
+Combined 48000 / -4 / -2: -6 cents
+Combined 48000 / 12 / 6: 21 cents
+Combined 48000 / -12 / -6: -12 cents
+Preserve centroids 704.021 -> 783.552, 716.923, 650.861
+Combined 48000 / 3 / 2: 6 cents
+Combined 48000 / -4 / -2: -6 cents
+Combined 48000 / 12 / 6: 21 cents
+Combined 48000 / -12 / -6: -12 cents
+Preserve centroids 704.021 -> 783.552, 716.923, 650.861
+Combined 96000 / 3 / 2: 6 cents
+Combined 96000 / -4 / -2: -6 cents
+Combined 96000 / 12 / 6: 21 cents
+Combined 96000 / -12 / -6: -12 cents
+Preserve centroids 704.021 -> 783.795, 716.85, 667.983
+Combined 96000 / 3 / 2: 6 cents
+Combined 96000 / -4 / -2: -6 cents
+Combined 96000 / 12 / 6: 21 cents
+Combined 96000 / -12 / -6: -12 cents
+Preserve centroids 704.021 -> 783.795, 716.85, 667.983
+Combined 44100 / 3 / 2: 1 cents
+Combined 44100 / -4 / -2: 0 cents
+Combined 44100 / 12 / 6: 0 cents
+Combined 44100 / -12 / -6: 0 cents
+Preserve centroids 704.021 -> 779.81, 724.408, 666.424
+Stereo mismatch 1 rate=44100 pitch=3 formant=2 relative=0.000111449
+Combined 44100 / 3 / 2: 1 cents
+Stereo mismatch 1 rate=44100 pitch=-4 formant=-2 relative=0.000211348
+Combined 44100 / -4 / -2: 0 cents
+Stereo mismatch 1 rate=44100 pitch=12 formant=6 relative=0.000245196
+Combined 44100 / 12 / 6: 0 cents
+Stereo mismatch 1 rate=44100 pitch=-12 formant=-6 relative=0.00152688
+Combined 44100 / -12 / -6: 0 cents
+Stereo mismatch 1 rate=44100 pitch=3 formant=0 relative=0.000116436
+Stereo mismatch 1 rate=44100 pitch=3 formant=0 relative=0.000115941
+Stereo mismatch 1 rate=44100 pitch=3 formant=0 relative=0.000126338
+Preserve centroids 704.021 -> 779.81, 724.408, 666.424
+Combined 48000 / 3 / 2: 1 cents
+Combined 48000 / -4 / -2: 0 cents
+Combined 48000 / 12 / 6: 0 cents
+Combined 48000 / -12 / -6: 0 cents
+Preserve centroids 704.021 -> 780.228, 730.09, 676.212
+Stereo mismatch 1 rate=48000 pitch=3 formant=2 relative=0.00014278
+Combined 48000 / 3 / 2: 1 cents
+Stereo mismatch 1 rate=48000 pitch=-4 formant=-2 relative=0.000216225
+Combined 48000 / -4 / -2: 0 cents
+Stereo mismatch 1 rate=48000 pitch=12 formant=6 relative=0.000209533
+Combined 48000 / 12 / 6: 0 cents
+Stereo mismatch 1 rate=48000 pitch=-12 formant=-6 relative=0.00240465
+Combined 48000 / -12 / -6: 0 cents
+Stereo mismatch 1 rate=48000 pitch=3 formant=0 relative=0.00012655
+Stereo mismatch 1 rate=48000 pitch=3 formant=0 relative=0.000149249
+Stereo mismatch 1 rate=48000 pitch=3 formant=0 relative=0.000175868
+Preserve centroids 704.021 -> 780.228, 730.09, 676.212
+Combined 96000 / 3 / 2: 1 cents
+Combined 96000 / -4 / -2: 0 cents
+Combined 96000 / 12 / 6: 0 cents
+Combined 96000 / -12 / -6: 0 cents
+Preserve centroids 704.021 -> 780.225, 730.088, 676.213
+Stereo mismatch 1 rate=96000 pitch=3 formant=2 relative=0.000144675
+Combined 96000 / 3 / 2: 1 cents
+Stereo mismatch 1 rate=96000 pitch=-4 formant=-2 relative=0.000186122
+Combined 96000 / -4 / -2: 0 cents
+Stereo mismatch 1 rate=96000 pitch=12 formant=6 relative=0.000105435
+Combined 96000 / 12 / 6: 0 cents
+Stereo mismatch 1 rate=96000 pitch=-12 formant=-6 relative=0.000249047
+Combined 96000 / -12 / -6: 0 cents
+Stereo mismatch 1 rate=96000 pitch=3 formant=0 relative=0.000133486
+Stereo mismatch 1 rate=96000 pitch=3 formant=0 relative=0.000152414
+Stereo mismatch 1 rate=96000 pitch=3 formant=0 relative=0.000160074
+Preserve centroids 704.021 -> 780.225, 730.088, 676.213
+Maximum sine step during rapid transform automation: 0.00174628
+Formant-only worst pitch deviation: 0 cents (1-cent grid); envelope direction and preservation passed
+Detector maximum error 1.87539 cents; noise voiced frames 0/375
+Vibrato control-domain span natural/hard: 0.48394 / 0.27517 st
+Note transition delays low/high: 23.9792 / 114.646 ms
+Rendered 5 Hz vibrato 5th-95th percentile span natural/hard: 0.401888 / 0.0698895 st
+PASS: correction detector, scales, vibrato, retune, state, rendered pitch, buffers and allocations
+Humanizer vibrato 44100 / 1: tight=0.055027 human=0.375497 vibrato=0.407222 st
+Humanizer vibrato 44100 / 2: tight=0.055027 human=0.375497 vibrato=0.407222 st
+Humanizer vibrato 48000 / 1: tight=0.0703915 human=0.372439 vibrato=0.402582 st
+Humanizer vibrato 48000 / 2: tight=0.0703915 human=0.372439 vibrato=0.402582 st
+Humanizer vibrato 96000 / 1: tight=0.0679593 human=0.37301 vibrato=0.403367 st
+Humanizer vibrato 96000 / 2: tight=0.0679593 human=0.37301 vibrato=0.403367 st
+PASS: Humanizer mapping, independent refinements, bounds, drift, voiced gating, state, rendered pitch, automation and allocations
+PASS: Phase 6 processor, pitch DSP, state, UI and VST3 checks
+<end of output>
+Test time =  86.74 sec
+----------------------------------------------------------
+Test Passed.
+"VocalisPhase6" end time: Sep 26 22:11 Pacific Daylight Time
+"VocalisPhase6" time elapsed: 00:01:26
+----------------------------------------------------------
+
+End testing: Sep 26 22:11 Pacific Daylight Time

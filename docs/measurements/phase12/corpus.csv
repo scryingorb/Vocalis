@@ -1,0 +1,24 @@
+name,category,seconds,sample_rate,steady_ground_truth_hz,provenance
+low-vowel,low,2,48000,120,deterministic additive source; VocalValidation.cpp
+low-vibrato,low,2,48000,0,deterministic additive source; VocalValidation.cpp
+low-legato-slide,low,2,48000,0,deterministic additive source; VocalValidation.cpp
+low-fast-notes,low,2,48000,0,deterministic additive source; VocalValidation.cpp
+low-quiet-breathy,low,2,48000,0,deterministic additive source; VocalValidation.cpp
+low-loud,low,2,48000,120,deterministic additive source; VocalValidation.cpp
+low-consonants,low,2,48000,0,deterministic additive source; VocalValidation.cpp
+mid-vowel,mid,2,48000,200,deterministic additive source; VocalValidation.cpp
+mid-vibrato,mid,2,48000,0,deterministic additive source; VocalValidation.cpp
+mid-legato-slide,mid,2,48000,0,deterministic additive source; VocalValidation.cpp
+mid-fast-notes,mid,2,48000,0,deterministic additive source; VocalValidation.cpp
+mid-quiet-breathy,mid,2,48000,0,deterministic additive source; VocalValidation.cpp
+mid-loud,mid,2,48000,200,deterministic additive source; VocalValidation.cpp
+mid-consonants,mid,2,48000,0,deterministic additive source; VocalValidation.cpp
+high-vowel,high,2,48000,330,deterministic additive source; VocalValidation.cpp
+high-vibrato,high,2,48000,0,deterministic additive source; VocalValidation.cpp
+high-legato-slide,high,2,48000,0,deterministic additive source; VocalValidation.cpp
+high-fast-notes,high,2,48000,0,deterministic additive source; VocalValidation.cpp
+high-quiet-breathy,high,2,48000,0,deterministic additive source; VocalValidation.cpp
+high-loud,high,2,48000,330,deterministic additive source; VocalValidation.cpp
+high-consonants,high,2,48000,0,deterministic additive source; VocalValidation.cpp
+Speech0,generated-spoken,12.3128,48000,0,local Windows SAPI; see spoken/provenance.csv
+Speech1,generated-spoken,12.1977,48000,0,local Windows SAPI; see spoken/provenance.csv

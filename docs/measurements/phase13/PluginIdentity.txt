@@ -1,0 +1,7 @@
+  "Version": "1.0.0",
+      "CID": "ABCDEF019182FAEB56636C73566F6361",
+      "Version": "1.0.0",
+      "SDKVersion": "VST 3.8.0",
+      "CID": "ABCDEF011234ABCD56636C73566F6361",
+      "Version": "1.0.0",
+      "SDKVersion": "VST 3.8.0",

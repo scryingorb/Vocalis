@@ -1,0 +1,21 @@
+﻿Vocalis Software License
+
+Copyright © 2026. All rights reserved.
+
+Vocalis is proprietary software.
+
+You are granted a limited, non-exclusive, non-transferable license to install and use Vocalis for personal or commercial music production purposes.
+
+You may not:
+
+- redistribute Vocalis or any portion of the software without permission
+- sell, sublicense, rent, lease, or otherwise distribute copies of Vocalis
+- reverse engineer, decompile, or disassemble the software except where applicable law expressly permits
+- remove or alter copyright, license, or attribution notices
+- represent Vocalis or modified versions of Vocalis as your own software
+
+Music and audio created using Vocalis remain the property of their respective creators. This license does not claim ownership over music, recordings, or other content created using Vocalis.
+
+Vocalis is provided "as is" without warranties of any kind, to the maximum extent permitted by applicable law.
+
+Third-party software included with or used by Vocalis remains subject to its respective licenses. See THIRD_PARTY_NOTICES.md for details.

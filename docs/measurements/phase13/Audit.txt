@@ -1,0 +1,7 @@
+All production Source files unchanged from Phase 12.
+Plugin CIDs unchanged from 0.9.0.
+CMake, PE FileVersion/ProductVersion and moduleinfo: 1.0.0.
+JUCE/Signalsmith Stretch/Linear/VST3 SDK licence copies match dependency sources.
+All 12 licence files in bundle match LICENSES.
+No production ULTRA source in CMake target.
+No new DSP dependency or UI selector.

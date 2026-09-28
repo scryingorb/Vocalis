@@ -1,0 +1,18 @@
+Vocalis 1.0.0 - Installation prerequisites
+
+Windows 10/11 x64 and a compatible x64 VST3 host are required.
+Install the Microsoft Visual C++ v14 x64 Redistributable if it is not already
+present. It must be at least as recent as the MSVC 14.29 build tools used here.
+Official download information:
+https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
+
+This installer does not detect, download or install the runtime.
+Close FL Studio and all other DAWs before installing or uninstalling.
+The complete bundle goes to the 64-bit Common Files\VST3\Vocalis.vst3 directory.
+Documentation and the uninstaller go to Program Files\Vocalis.
+Existing files inside the Vocalis.vst3 bundle are replaced. Keep personal files
+outside plugin bundles. Other plugins and FL Studio settings are not changed.
+
+This unsigned Release Candidate still requires manual host/listening and
+clean-machine testing. Public distribution also requires owner confirmation
+of JUCE licensing and Vocalis distribution terms. Consult the installed notices.
