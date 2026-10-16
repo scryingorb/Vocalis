@@ -25,7 +25,7 @@ Windows 10/11 x64, a Windows x64 VST3 host, and Microsoft Visual C++ v14 x64
 runtime. Install the supported [Microsoft Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)
 if needed. No separate JUCE or Signalsmith DLL or online service is required.
 An ASIO audio interface is recommended for monitoring; its driver belongs to
-FL Studio, not the plugin. This release is unsigned and has no installer.
+FL Studio, not the plugin. The installer is unsigned. Download [Vocalis 1.0.0 Setup](dist/Vocalis-1.0.0-Setup.exe) and choose Download raw file on GitHub; run it with administrator approval. See [installer instructions](installer/README.md).
 
 1. Close the host before replacing Vocalis.
 2. Extract `Vocalis-1.0.0-Windows-x64.zip`.
@@ -144,4 +144,5 @@ This RC package is a technical delivery, not public/commercial legal clearance.
 Screenshots: release screenshot placeholder; GUI snapshots are retained in the
 local build for inspection. Version 1.0 feature development is frozen. Remaining
 work is manual sign-off, licensing and distribution approval, not new DSP.
+
 

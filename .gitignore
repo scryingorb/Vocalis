@@ -1,8 +1,8 @@
-/build/
+﻿/build/
 /external/
 /tools/*
 !/tools/PackageRelease.ps1
-/dist/
+/dist/*
 /.vs/
 /.vscode/
 /.idea/
@@ -19,3 +19,7 @@ CMakeUserPresets.json
 *.p12
 *.key
 /phase11-active-cpu.csv
+
+!/dist/Vocalis-1.0.0-Setup.exe
+!/dist/SHA256SUMS.txt
+
