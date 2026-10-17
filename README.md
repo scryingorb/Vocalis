@@ -5,6 +5,15 @@ primary target. This candidate freezes the existing production audio engine.
 Manual host/listening and clean-machine sign-off remain pending; see
 [Release checklist](docs/ReleaseChecklist.md).
 
+## UI Preview
+
+**Source-generated UI preview ? not an actual application screenshot.**
+Reconstructed from the UI source and supplied logo using static SVG rendering,
+showing the default idle interface at 2? resolution (2240 ? 1800). The application
+was not launched; font rasterization and gradients may differ slightly at runtime.
+
+![Vocalis source-generated UI preview](docs/screenshots/main-interface.png)
+
 ## Features
 
 - Mono/stereo vocal processing with manual pitch and independent formant shift.
@@ -141,8 +150,8 @@ notices does not alone satisfy AGPL source obligations. No JUCE entitlement was
 verified. Owner-provided proprietary terms are in [LICENSE.txt](LICENSE.txt). See the [JUCE 8 licence](https://juce.com/legal/juce-8-licence/).
 This RC package is a technical delivery, not public/commercial legal clearance.
 
-Screenshots: release screenshot placeholder; GUI snapshots are retained in the
-local build for inspection. Version 1.0 feature development is frozen. Remaining
+The source-generated UI preview above documents the interface; it is not a host
+validation screenshot. Version 1.0 feature development is frozen. Remaining
 work is manual sign-off, licensing and distribution approval, not new DSP.
 
 
