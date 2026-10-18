@@ -1,18 +1,10 @@
-﻿# Vocalis 1.0.0 Release Candidate
+# Vocalis
 
-Vocal Shaping Engine for Windows 10/11 x64 VST3 hosts, with FL Studio as the
-primary target. This candidate freezes the existing production audio engine.
-Manual host/listening and clean-machine sign-off remain pending; see
-[Release checklist](docs/ReleaseChecklist.md).
+Windows VST3 vocal processor with pitch correction, pitch and formant shifting, and humanization, built with JUCE.
 
-## UI Preview
+## Overview
 
-**Source-generated UI preview ? not an actual application screenshot.**
-Reconstructed from the UI source and supplied logo using static SVG rendering,
-showing the default idle interface at 2? resolution (2240 ? 1800). The application
-was not launched; font rasterization and gradients may differ slightly at runtime.
-
-![Vocalis source-generated UI preview](docs/screenshots/main-interface.png)
+Vocalis shapes monophonic vocals through pitch correction, independent pitch/formant controls, and humanization. It targets Windows 10/11 x64 VST3 hosts, with FL Studio as the primary target. See the [release checklist](docs/ReleaseChecklist.md) for remaining manual checks.
 
 ## Features
 
@@ -28,13 +20,19 @@ through the internal preparation API, with no UI selector or mode automation.
 ULTRA30 is hidden research code, excluded from the production plugin. It is not
 an available product feature. Plugin identity and all 18 parameter IDs are unchanged.
 
-## Requirements and installation
+## Technologies
+
+C++17, JUCE 8.0.12, Signalsmith Stretch and Linear, VST3, CMake, and MSVC.
+
+## Getting Started
 
 Windows 10/11 x64, a Windows x64 VST3 host, and Microsoft Visual C++ v14 x64
 runtime. Install the supported [Microsoft Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)
 if needed. No separate JUCE or Signalsmith DLL or online service is required.
 An ASIO audio interface is recommended for monitoring; its driver belongs to
-FL Studio, not the plugin. The installer is unsigned. Download [Vocalis 1.0.0 Setup](dist/Vocalis-1.0.0-Setup.exe) and choose Download raw file on GitHub; run it with administrator approval. See [installer instructions](installer/README.md).
+FL Studio, not the plugin. The installer is unsigned. Download [Vocalis 1.0.0 Setup from the GitHub release](https://github.com/scryingorb/Vocalis/releases/tag/v1.0.0); run it with administrator approval. See [installer instructions](installer/README.md).
+
+The GitHub release provides an installer and checksums, not the portable ZIP described below. The following manual-install steps apply only if you have built or obtained the local ZIP.
 
 1. Close the host before replacing Vocalis.
 2. Extract `Vocalis-1.0.0-Windows-x64.zip`.
@@ -50,7 +48,25 @@ then **Find installed plugins**. Add Vocalis to a Mixer effect slot through
 Use a recorded vocal first, then a microphone with headphones. Avoid feedback.
 Save and reopen a project to verify restoration on your system.
 
-## Controls
+### Build or run from source
+
+C++17, JUCE 8.0.12, Signalsmith Stretch 1.3.2 and Signalsmith Linear 0.6.4;
+MSVC, Windows SDK and CMake 3.24+. Revisions and bundled support libraries are
+listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+```powershell
+cmake -S . -B build -A x64 -DVOCALIS_BUILD_TESTS=ON
+cmake --build build --config Release --target Vocalis_VST3 VocalisTests --parallel 2
+ctest --test-dir build -C Release --output-on-failure
+```
+
+Use CMake on PATH. To select VS 2022 explicitly, use `-G "Visual Studio 17 2022"`
+and a separate build directory. Missing external source directories trigger
+pinned dependency downloads. Development tools/source are not in the binary ZIP.
+Release bundle: `build/Vocalis_artefacts/Release/VST3/Vocalis.vst3`.
+Package: `dist/Vocalis-1.0.0-Windows-x64.zip`; checksums: `dist/SHA256SUMS.txt`.
+
+## Usage
 
 | Control | Behavior |
 |---|---|
@@ -123,26 +139,11 @@ buffers. Approximately 49 ms plugin delay is significant for live singing.
 - Windows x64 VST3 only. Clean-machine, FL Studio reopen/automation and human
   listening checks must be completed before final public release.
 
-## Technology and building
+## Project Status
 
-C++17, JUCE 8.0.12, Signalsmith Stretch 1.3.2 and Signalsmith Linear 0.6.4;
-MSVC, Windows SDK and CMake 3.24+. Revisions and bundled support libraries are
-listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Released on GitHub as version 1.0.0; the repository still identifies the engine as a release candidate. Manual host/listening, clean-machine, and licensing sign-off remain pending.
 
-```powershell
-$cmake = "$PWD/tools/cmake-3.31.8-windows-x86_64/bin/cmake.exe"
-& $cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DVOCALIS_BUILD_TESTS=ON
-& $cmake --build build --config Release --target Vocalis_VST3 VocalisTests --parallel 2
-& "$PWD/tools/cmake-3.31.8-windows-x86_64/bin/ctest.exe" --test-dir build -C Release --output-on-failure
-```
-
-With CMake on PATH use `cmake`/`ctest`; VS 2022 uses `Visual Studio 17 2022`
-and a separate build directory. Missing external source directories trigger
-pinned dependency downloads. Development tools/source are not in the binary ZIP.
-Release bundle: `build/Vocalis_artefacts/Release/VST3/Vocalis.vst3`.
-Package: `dist/Vocalis-1.0.0-Windows-x64.zip`; checksums: `dist/SHA256SUMS.txt`.
-
-## Licence and release status
+## License
 
 Retain THIRD_PARTY_NOTICES.md and all LICENSES, including bundle resource copies.
 JUCE's commercial/AGPL licensing route must be confirmed by the owner; including
@@ -150,8 +151,5 @@ notices does not alone satisfy AGPL source obligations. No JUCE entitlement was
 verified. Owner-provided proprietary terms are in [LICENSE.txt](LICENSE.txt). See the [JUCE 8 licence](https://juce.com/legal/juce-8-licence/).
 This RC package is a technical delivery, not public/commercial legal clearance.
 
-The source-generated UI preview above documents the interface; it is not a host
-validation screenshot. Version 1.0 feature development is frozen. Remaining
+Version 1.0 feature development is frozen. Remaining
 work is manual sign-off, licensing and distribution approval, not new DSP.
-
-
