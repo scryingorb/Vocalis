@@ -20,6 +20,15 @@ through the internal preparation API, with no UI selector or mode automation.
 ULTRA30 is hidden research code, excluded from the production plugin. It is not
 an available product feature. Plugin identity and all 18 parameter IDs are unchanged.
 
+## UI Preview
+
+**Source-generated UI preview - not an actual application screenshot.**
+Reconstructed from the UI source and supplied logo using static SVG rendering,
+showing the default idle interface at 2x resolution (2240 x 1800). The application
+was not launched; font rasterization and gradients may differ slightly at runtime.
+
+![Vocalis source-generated UI preview](docs/screenshots/main-interface.png)
+
 ## Technologies
 
 C++17, JUCE 8.0.12, Signalsmith Stretch and Linear, VST3, CMake, and MSVC.
