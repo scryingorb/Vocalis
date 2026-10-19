@@ -12,7 +12,8 @@ Vocalis shapes monophonic vocals through pitch correction, independent pitch/for
 - Monophonic automatic correction: C through B, Major, natural Minor, Chromatic.
 - Humanize, vibrato preservation, drift and transition controls; Bloom macro.
 - Nine editable factory presets, host automation and project state restoration.
-- Resizable green/mint/aqua interface, Pitch Orb and input/output meters.
+- Resizable green/mint/aqua interface down to 900x700, keyboard Tab navigation,
+  Pitch Orb and input/output meters.
 - Aligned Dry/Wet and bypass; accurate fixed host latency compensation.
 
 LIVE is the default and the mode used by the plugin. QUALITY remains functional
@@ -20,10 +21,12 @@ through the internal preparation API, with no UI selector or mode automation.
 ULTRA30 is hidden research code, excluded from the production plugin. It is not
 an available product feature. Plugin identity and all 18 parameter IDs are unchanged.
 
-The [2026-10-18 source audit](docs/CurrentAudit.md) fixes detector boundary
-dropouts, deterministic recovery of incomplete states, compact UI value fields,
-and ZIP validation/checksum handling. These are source changes; existing installer
-downloads have not been rebuilt by this audit.
+The [source audit and follow-up](docs/CurrentAudit.md) improve detector boundary
+tracking and low/mid vocal octave detection, recover incomplete states
+deterministically, reduce high-rate CPU peaks, and preserve compact UI value
+fields. ZIP and installer packaging share regression and bundle-integrity checks.
+A local review installer was built and validated; the published 1.0.0 download
+has not been replaced with these changes.
 
 ## UI Preview
 
@@ -84,7 +87,7 @@ the build directory. It writes `audit-cpu.csv` for 44.1/48/96 kHz, mono/stereo,
 64/128/256/512-sample buffers, natural/hard tuning and automation. Its callback
 timing is not an ASIO or DAW certification.
 
-ZIP staging now runs the current Release regression and checks the module hash
+ZIP staging runs the current Release regression and checks the entire bundle
 before copying. Use a new destination inside the project (existing packages are
 never overwritten):
 
@@ -96,6 +99,12 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/PackageRelease.ps1
 local bundled CMake tool are checked. Unrelated entries in `SHA256SUMS.txt` are
 retained. The installer helper uses the same current-test and complete-bundle
 hash checks; actual installation/upgrade/uninstall acceptance remains manual.
+
+To build a review installer with Inno Setup installed, use a fresh output directory:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File installer/BuildInstaller.ps1 -BuildDirectory build/audit -OutputDirectory build/audit/installer-review
+```
 
 Use CMake on PATH. To select VS 2022 explicitly, use `-G "Visual Studio 17 2022"`
 and a separate build directory. Missing external source directories trigger
@@ -182,6 +191,11 @@ unchanged. The editor can resize down to 900x700 and has explicit Tab navigation
 ## Project Status
 
 Released on GitHub as version 1.0.0; the repository still identifies the engine as a release candidate. Manual host/listening, clean-machine, and licensing sign-off remain pending.
+
+The current source passed the full automated regression, an additional 354-case
+pitch-detector sweep, and installer build/version/checksum validation. The
+[audit results](docs/CurrentAudit.md) include measured CPU improvements and their
+latency tradeoff. These checks do not replace manual DAW and vocal listening tests.
 
 ## License
 
