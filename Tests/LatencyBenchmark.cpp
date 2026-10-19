@@ -37,7 +37,8 @@ const Candidate candidates[] = {
     {"live40", {0.04, 0.00125, false, false}},
     {"live40_split", {0.04, 0.00125, true, false}},
     {"live40_24x", {0.04, 0.04 / 24.0, false, false}},
-    {"live48_16x", {0.048, 0.003, false, false}}
+    {"live48_16x", {0.048, 0.003, false, false}},
+    {"live48_split", {0.048, 0.003, true, false}}
 };
 using Clock = std::chrono::steady_clock;
 double freq(const std::vector<float>& signal, int start, int end, double rate)

@@ -32,18 +32,20 @@ struct PitchShifter::Impl
 PitchShifter::PitchShifter() : impl(std::make_unique<Impl>()) {}
 PitchShifter::~PitchShifter() = default;
 
-PitchShifter::Configuration PitchShifter::configurationFor(Mode mode) noexcept
+PitchShifter::Configuration PitchShifter::configurationFor(Mode mode, double sampleRate) noexcept
 {
     // Benchmarked compromise: short window, dense overlap for low vocal notes.
     // QUALITY retains the Phase 2 configuration. See docs/LatencyOptimization.md.
-    return mode == Mode::live ? Configuration{0.048, 0.003, false, false}
+    // At high rates, spread spectral work over the hop instead of doing it in
+    // one callback. This costs one 3ms hop of reported/aligned latency.
+    return mode == Mode::live ? Configuration{0.048, 0.003, sampleRate >= 88200.0, false}
                              : Configuration{0.12, 0.015, false};
 }
 
 void PitchShifter::prepare(double sampleRate, int channels, float initialSemitones, Mode mode,
                            float formantShift, float preservePercent)
 {
-    prepare(sampleRate, channels, initialSemitones, configurationFor(mode), formantShift, preservePercent);
+    prepare(sampleRate, channels, initialSemitones, configurationFor(mode, sampleRate), formantShift, preservePercent);
 }
 
 void PitchShifter::prepare(double sampleRate, int channels, float initialSemitones, Configuration config,

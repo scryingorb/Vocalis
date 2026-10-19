@@ -20,6 +20,11 @@ through the internal preparation API, with no UI selector or mode automation.
 ULTRA30 is hidden research code, excluded from the production plugin. It is not
 an available product feature. Plugin identity and all 18 parameter IDs are unchanged.
 
+The [2026-10-18 source audit](docs/CurrentAudit.md) fixes detector boundary
+dropouts, deterministic recovery of incomplete states, compact UI value fields,
+and ZIP validation/checksum handling. These are source changes; existing installer
+downloads have not been rebuilt by this audit.
+
 ## UI Preview
 
 **Source-generated UI preview - not an actual application screenshot.**
@@ -68,6 +73,29 @@ cmake -S . -B build -A x64 -DVOCALIS_BUILD_TESTS=ON
 cmake --build build --config Release --target Vocalis_VST3 VocalisTests --parallel 2
 ctest --test-dir build -C Release --output-on-failure
 ```
+
+If a copied/moved workspace has a cache referring to an old path, configure a
+fresh directory such as `build/audit` and use it in all three commands. Do not
+reuse or manually rewrite the stale cache. The audit used the already-present
+`tools/cmake-3.31.8-windows-x86_64/bin` tools when CMake was absent from PATH.
+
+For an opt-in offline CPU matrix, run `VocalisTests.exe --audit-benchmark` from
+the build directory. It writes `audit-cpu.csv` for 44.1/48/96 kHz, mono/stereo,
+64/128/256/512-sample buffers, natural/hard tuning and automation. Its callback
+timing is not an ASIO or DAW certification.
+
+ZIP staging now runs the current Release regression and checks the module hash
+before copying. Use a new destination inside the project (existing packages are
+never overwritten):
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/PackageRelease.ps1 -BuildDirectory build/audit -Destination dist/Vocalis-review
+```
+
+`-CTestPath` can select an existing CTest executable; otherwise PATH and the
+local bundled CMake tool are checked. Unrelated entries in `SHA256SUMS.txt` are
+retained. The installer helper uses the same current-test and complete-bundle
+hash checks; actual installation/upgrade/uninstall acceptance remains manual.
 
 Use CMake on PATH. To select VS 2022 explicitly, use `-G "Visual Studio 17 2022"`
 and a separate build directory. Missing external source directories trigger
@@ -127,12 +155,15 @@ Processing quality is independent of creative preset choice.
 |---|---:|---:|
 | 44.1 kHz | 2180 / 49.4331 | 5356 / 121.4512 |
 | 48 kHz | 2368 / 49.3333 | 5824 / 121.3333 |
-| 88.2 kHz | 4297 / 48.7188 | 10648 / 120.7256 |
-| 96 kHz | 4672 / 48.6667 | 11584 / 120.6667 |
+| 88.2 kHz | 4561 / 51.7120 | 10648 / 120.7256 |
+| 96 kHz | 4960 / 51.6667 | 11584 / 120.6667 |
 
 Host compensation aligns playback tracks; it cannot remove monitoring delay.
 Total monitoring delay also includes interface input/output and host/ASIO
-buffers. Approximately 49 ms plugin delay is significant for live singing.
+buffers. Approximately 49–52 ms plugin delay is significant for live singing.
+At 88.2/96 kHz, spectral work is spread across a hop to reduce callback peaks;
+the additional 3 ms is included in reported latency. Lower-rate scheduling is
+unchanged. The editor can resize down to 900x700 and has explicit Tab navigation.
 
 - Correction assumes a single vocal, not chords or full mixes. Noise, breath,
   weak fundamentals and changing notes can cause detection/octave errors.
@@ -160,5 +191,6 @@ notices does not alone satisfy AGPL source obligations. No JUCE entitlement was
 verified. Owner-provided proprietary terms are in [LICENSE.txt](LICENSE.txt). See the [JUCE 8 licence](https://juce.com/legal/juce-8-licence/).
 This RC package is a technical delivery, not public/commercial legal clearance.
 
-Version 1.0 feature development is frozen. Remaining
-work is manual sign-off, licensing and distribution approval, not new DSP.
+The source remains a release candidate pending manual sign-off and distribution
+approval. The latest audit contains focused maintenance fixes, with no new
+parameters, dependencies or alternate production engine.

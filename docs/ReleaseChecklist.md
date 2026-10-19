@@ -27,6 +27,18 @@ buffer size, preset/settings and any observed failure.
 QUALITY is tested internally, not selectable in the current plugin. ULTRA is
 not shipped. Do not claim to have tested either through an absent UI selector.
 
+## Additional Windows VST3 hosts (pending)
+
+FL Studio, Ableton Live, REAPER and Studio One have **not** been tested by the
+2026-10-18 audit. Repeat the following in each intended host and record its exact
+version; the JUCE VST3 test host is not evidence of named-DAW compatibility:
+
+- [ ] Scan/load the rebuilt complete bundle; open, resize and close the editor.
+- [ ] Exercise mono/stereo at 44.1/48/96 kHz and 64/128/256/512 buffers where supported.
+- [ ] Automate tuning, pitch/formants, mix and host bypass; check clicks/dropouts.
+- [ ] Confirm reported latency, render alignment and the end of a stopped clip.
+- [ ] Save, fully close and reopen a project with edited presets and automation.
+
 ## Vocal listening (pending)
 
 Use recorded human voices, moderate input levels and then controlled loud input.

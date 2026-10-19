@@ -84,8 +84,7 @@ void runLatencyTests()
                 set(processors[3], "bypass", 1);
                 for (auto& p : processors) p.prepareToPlay(rate, 64);
                 const int latency = processors[0].getLatencySamples();
-                const auto config = PitchShifter::configurationFor(PitchShifter::Mode::live);
-                require(latency == static_cast<int>(rate * config.blockSeconds) + 64,
+                require(latency == static_cast<int>(rate * .048) + (rate >= 88200 ? static_cast<int>(rate * .003) : 0) + 64,
                     "Unexpected LIVE latency");
                 for (auto& p : processors) require(p.getLatencySamples() == latency, "Mode-dependent path latency");
 

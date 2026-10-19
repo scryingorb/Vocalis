@@ -48,7 +48,8 @@ double pitchError(const std::vector<float>& a,double rate,double expected) {
 std::vector<float> render(double rate,int channels,float pitch,float formant,float preserve,PitchShifter::Mode mode) {
     auto source=vowel(rate); std::vector<float> left(source.size()),right(source.size());
     PitchShifter dsp; dsp.prepare(rate,channels,pitch,mode,formant,preserve);
-    check(dsp.latencySamples()==int(rate*(mode==PitchShifter::Mode::live?0.048:0.12))+64,"Formant latency changed");
+    check(dsp.latencySamples()==int(rate*(mode==PitchShifter::Mode::live?0.048:0.12))
+        +(mode==PitchShifter::Mode::live&&rate>=88200?int(rate*.003):0)+64,"Formant latency changed");
     const int sizes[]={1,17,64,127,256,511,1024}; int index=0;
     for(int pos=0;pos<int(source.size());) {
         int n=std::min(sizes[index++%7],int(source.size())-pos);

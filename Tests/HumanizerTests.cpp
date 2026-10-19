@@ -69,7 +69,8 @@ std::vector<float> render(double rate,int channels,Humanizer::Controls controls,
 {
     PitchShifter dsp;dsp.setHumanizeControls(controls);dsp.prepare(rate,channels,0,mode,0,0);
     dsp.setCorrectionControls({0,2,100,100,0,100});
-    check(dsp.latencySamples()==int(rate*(mode==PitchShifter::Mode::live?.048:.12))+64,"Humanizer changed latency");
+    check(dsp.latencySamples()==int(rate*(mode==PitchShifter::Mode::live?.048:.12))
+        +(mode==PitchShifter::Mode::live&&rate>=88200?int(rate*.003):0)+64,"Humanizer changed latency");
     std::vector<float> input(size_t(rate*3),0),left(input.size()),right(input.size());double phase=0;
     for(size_t i=0;i<input.size();++i)
     {

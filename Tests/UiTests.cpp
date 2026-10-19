@@ -43,7 +43,7 @@ void layoutTests()
     orb.setFrequency(440,false);check(orb.noteText()=="--"&&orb.centsText()=="--","Pitch Orb inactive display");
     VocalisAudioProcessor p;p.presets.apply(3);
     std::unique_ptr<juce::AudioProcessorEditor> editor(p.createEditor());check(editor->isResizable(),"Editor not resizable");
-    for(auto size:{juce::Point<int>{1000,800},{1120,900},{1600,1200},{1450,850}})
+    for(auto size:{juce::Point<int>{900,700},{1000,750},{1000,800},{1120,900},{1600,1200},{1450,850}})
     {
         editor->setSize(size.x,size.y);
         std::vector<juce::Component*> interactive;
@@ -53,13 +53,36 @@ void layoutTests()
             check(editor->getLocalBounds().contains(child->getBounds()),"Resized child outside editor");
             if(dynamic_cast<juce::Slider*>(child)||dynamic_cast<juce::ComboBox*>(child)||dynamic_cast<juce::Button*>(child))
             {
-                check(child->getWidth()>=60&&child->getHeight()>=17,"Control too small after resize");interactive.push_back(child);
+                check(child->getWidth()>=60&&child->getHeight()>=26,"Control too small after resize");interactive.push_back(child);
+            }
+            if(auto* slider=dynamic_cast<juce::Slider*>(child))
+            {
+                bool foundValueField=false;
+                for(auto* sliderChild:slider->getChildren())
+                    if(auto* valueField=dynamic_cast<juce::Label*>(sliderChild))
+                    {
+                        foundValueField=true;
+                        check(valueField->isVisible()&&valueField->isEditable(),"Slider value field is not editable");
+                        check(slider->getLocalBounds().contains(valueField->getBounds()),"Slider value field outside control");
+                        check(valueField->getWidth()>=slider->getTextBoxWidth()
+                              &&valueField->getHeight()>=slider->getTextBoxHeight(),"Slider value field compressed after resize");
+                    }
+                check(foundValueField,"Slider value field missing");
             }
             if(auto* pitchOrb=dynamic_cast<PitchOrb*>(child))pitchOrb->setFrequency(220*std::pow(2.f,-.07f/12),true);
         }
         for(size_t i=0;i<interactive.size();++i)for(size_t j=i+1;j<interactive.size();++j)
             check(!interactive[i]->getBounds().intersects(interactive[j]->getBounds()),"Interactive controls overlap");
         check(interactive.size()==27,"Missing attached controls or preset buttons"); // 18 parameters + 9 presets
+        std::vector<int> focusOrders;
+        for(auto* control:interactive)
+        {
+            check(control->getWantsKeyboardFocus(),"Control missing keyboard access");
+            focusOrders.push_back(control->getExplicitFocusOrder());
+        }
+        std::sort(focusOrders.begin(),focusOrders.end());
+        for(size_t i=0;i<focusOrders.size();++i)
+            check(focusOrders[i]==int(i)+1,"Keyboard order is missing or duplicated");
         writeSnapshot(*editor,"Vocalis-ui-"+juce::String(size.x)+"x"+juce::String(size.y)+".png");
     }
 }

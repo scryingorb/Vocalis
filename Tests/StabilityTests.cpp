@@ -36,6 +36,53 @@ void stateValidation()
     p.setStateInformation(data.getData(),int(data.getSize()));
     for(auto* parameter:p.getParameters()) require(std::isfinite(parameter->getValue())&&parameter->getValue()>=0&&parameter->getValue()<=1,"Invalid restored parameter");
     require(p.parameters.getRawParameterValue(ParameterIDs::formantShift)->load()==6,"Out-of-range state not clamped");
+
+    const auto restore = [](VocalisAudioProcessor& processor, const juce::ValueTree& tree)
+    {
+        juce::MemoryBlock serialized;
+        juce::AudioProcessor::copyXmlToBinary(*tree.createXml(), serialized);
+        processor.setStateInformation(serialized.getData(), static_cast<int>(serialized.getSize()));
+    };
+    VocalisAudioProcessor fresh, reused;
+    for (auto* parameter : reused.getParameters())
+        parameter->setValueNotifyingHost(parameter->getDefaultValue() < 0.5f ? 0.75f : 0.25f);
+
+    // Missing children must not retain previous instance values. Preserve the
+    // original session migration: an absent formantPreserve means no compensation.
+    juce::ValueTree partial("VocalisState"), pitch("PARAM");
+    pitch.setProperty("id", ParameterIDs::pitch, nullptr);
+    pitch.setProperty("value", 4.5f, nullptr);
+    partial.appendChild(pitch, nullptr);
+    restore(fresh, partial);
+    restore(reused, partial);
+    for (auto* parameter : fresh.getParameters())
+    {
+        auto* ranged = dynamic_cast<juce::RangedAudioParameter*>(parameter);
+        require(ranged != nullptr, "State test requires ranged parameters");
+        float expected = ranged->convertFrom0to1(ranged->getDefaultValue());
+        if (ranged->paramID == ParameterIDs::formantPreserve) expected = 0;
+        if (ranged->paramID == ParameterIDs::pitch) expected = 4.5f;
+        require(std::abs(fresh.parameters.getRawParameterValue(ranged->paramID)->load() - expected) < 0.001f,
+                "Partial state did not restore the expected default or supplied value");
+        require(std::abs(reused.parameters.getRawParameterValue(ranged->paramID)->load() - expected) < 0.001f,
+                "Partial state retained a previous instance value");
+    }
+
+    // A present parameter with a missing value uses its parameter default;
+    // in particular Dry/Wet stays audible and Formant Preserve defaults to 100.
+    auto missingValues = fresh.parameters.copyState();
+    for (auto child : missingValues) child.removeProperty("value", nullptr);
+    restore(reused, missingValues);
+    for (auto* parameter : reused.getParameters())
+        require(std::abs(parameter->getValue() - parameter->getDefaultValue()) < 0.00001f,
+                "Missing state value did not use the parameter default");
+
+    juce::ValueTree wrongRoot("OtherPluginState");
+    wrongRoot.appendChild(pitch.createCopy(), nullptr);
+    restore(reused, wrongRoot);
+    for (auto* parameter : reused.getParameters())
+        require(std::abs(parameter->getValue() - parameter->getDefaultValue()) < 0.00001f,
+                "Wrong-root state changed parameters");
 }
 void reprepareAndStress()
 {
@@ -44,7 +91,7 @@ void reprepareAndStress()
     for(double rate:{44100.,48000.,88200.,96000.,44100.})for(int channels:{1,2})
     {
         p.releaseResources();p.setPlayConfigDetails(channels,channels,rate,64);p.prepareToPlay(rate,64);
-        const int expected=int(rate*.048)+64;
+        const int expected=int(rate*.048)+(rate>=88200?int(rate*.003):0)+64;
         require(p.getLatencySamples()==expected,"Reprepare latency incorrect");
         std::cout<<"Stability rate="<<rate<<" channels="<<channels<<" latency="<<expected<<" samples / "<<expected*1000/rate<<" ms\n";
         juce::AudioBuffer<float> b(channels,4096);juce::MidiBuffer midi;

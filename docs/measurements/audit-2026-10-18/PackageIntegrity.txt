@@ -1,0 +1,1 @@
+﻿PASS: 34 staged/archive files hash-match; per-file manifest valid; unrelated checksum retained

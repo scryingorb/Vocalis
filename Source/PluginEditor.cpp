@@ -61,7 +61,20 @@ VocalisAudioProcessorEditor::VocalisAudioProcessorEditor(VocalisAudioProcessor& 
     addAndMakeVisible(bypass);bypass.setTooltip("Bypass processing with the existing aligned delay and crossfade.");
     bypassAttachment=std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(processor.parameters,ParameterIDs::bypass,bypass);
     addAndMakeVisible(orb);addAndMakeVisible(logo);addAndMakeVisible(inputMeter);addAndMakeVisible(outputMeter);
-    setResizable(true,true);setResizeLimits(1000,800,1600,1200);setSize(1120,900);
+    // Stable musical Tab order, independent of resize geometry or child creation.
+    int focusOrder=1;
+    const auto focusable=[&focusOrder](juce::Component& control)
+    {
+        control.setWantsKeyboardFocus(true);
+        control.setExplicitFocusOrder(focusOrder++);
+    };
+    focusable(keySelector);focusable(scaleSelector);
+    for(auto& control:tune)focusable(control);
+    for(auto* control:std::array<juce::Component*,4>{{&pitch,&formant,&preserve,&bloom}})focusable(*control);
+    for(auto& control:humanize)focusable(control);
+    for(auto& control:presetButtons)focusable(*control);
+    focusable(input);focusable(mix);focusable(output);focusable(bypass);
+    setResizable(true,true);setResizeLimits(900,700,1600,1200);setSize(1120,900);
     sendLookAndFeelChange(); // Refresh text boxes created before controls joined the editor.
     timerCallback();startTimerHz(20);
 }
@@ -86,14 +99,22 @@ void VocalisAudioProcessorEditor::paint(juce::Graphics& g)
 }
 void VocalisAudioProcessorEditor::resized()
 {
-    auto area=getLocalBounds().reduced(inset);
-    headerBounds=area.removeFromTop(juce::jlimit(160,230,int(getHeight()*.22)));area.removeFromTop(gap);
+    const bool compact=getHeight()<800;
+    const int layoutGap=compact?10:gap;
+    auto area=getLocalBounds().reduced(compact?12:inset);
+    const int bottomHeight=compact?90:96, presetHeight=compact?120:134;
+    constexpr int minimumPanelHeight=352;
+    // At minimum size, reclaim decorative header space so Tune's 26px value
+    // fields fit below their labels. The default and larger layouts are unchanged.
+    const int preferredHeaderHeight=juce::jlimit(160,230,int(getHeight()*.22));
+    const int availableHeaderHeight=area.getHeight()-bottomHeight-presetHeight-3*layoutGap-minimumPanelHeight;
+    headerBounds=area.removeFromTop(juce::jmax(0,juce::jmin(preferredHeaderHeight,availableHeaderHeight)));area.removeFromTop(layoutGap);
     auto header = headerBounds;
     orb.setBounds(header.removeFromRight(headerBounds.getHeight()));
     // Reserve equal side widths so the brand stays centred in the window.
     logo.setBounds(headerBounds.reduced(headerBounds.getHeight()+gap, 0));
-    bottomPanel.setBounds(area.removeFromBottom(96));area.removeFromBottom(gap);
-    presetPanel.setBounds(area.removeFromBottom(134));area.removeFromBottom(gap);
+    bottomPanel.setBounds(area.removeFromBottom(bottomHeight));area.removeFromBottom(layoutGap);
+    presetPanel.setBounds(area.removeFromBottom(presetHeight));area.removeFromBottom(layoutGap);
     tunePanel.setBounds(gridCell(area,0,3,1));voicePanel.setBounds(gridCell(area,1,3,1));humanizePanel.setBounds(gridCell(area,2,3,1));
     auto tuning=tunePanel.contentBounds();auto selections=tuning.removeFromTop(60);tuning.removeFromTop(6);
     labelledControl(gridCell(selections,0,2,1,10),keyLabel,keySelector);labelledControl(gridCell(selections,1,2,1,10),scaleLabel,scaleSelector);

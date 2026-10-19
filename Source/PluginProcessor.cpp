@@ -219,6 +219,12 @@ void VocalisAudioProcessor::setStateInformation(const void* data, int size)
                 child.setProperty("value", value, nullptr);
                 state.appendChild(child, nullptr);
             };
+            // A partial state must restore identically in fresh and reused
+            // instances; APVTS otherwise retains values for missing children.
+            addMissing(ParameterIDs::inputGain, 0.0f);
+            addMissing(ParameterIDs::dryWet, 100.0f);
+            addMissing(ParameterIDs::outputGain, 0.0f);
+            addMissing(ParameterIDs::bypass, 0.0f);
             addMissing(ParameterIDs::pitch, 0.0f);
             addMissing(ParameterIDs::formantShift, 0.0f);
             addMissing(ParameterIDs::formantPreserve, 0.0f);
@@ -238,8 +244,9 @@ void VocalisAudioProcessor::setStateInformation(const void* data, int size)
             for (auto child : state)
                 if (auto* parameter = parameters.getParameter(child.getProperty("id").toString()))
                 {
-                    float value = static_cast<float>(child.getProperty("value"));
-                    if (!std::isfinite(value)) value = parameter->convertFrom0to1(parameter->getDefaultValue());
+                    const float defaultValue = parameter->convertFrom0to1(parameter->getDefaultValue());
+                    float value = static_cast<float>(child.getProperty("value", defaultValue));
+                    if (!std::isfinite(value)) value = defaultValue;
                     child.setProperty("value", parameter->getNormalisableRange().snapToLegalValue(value), nullptr);
                 }
             parameters.replaceState(state);

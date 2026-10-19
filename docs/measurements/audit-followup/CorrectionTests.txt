@@ -1,0 +1,7 @@
+PASS: detector endpoints, adjacent pitches and outside-range rejection in both profiles
+PASS: dominant harmonics, breathy fixtures, unvoiced noise and genuine octave transitions
+Detector maximum error 1.87539 cents; noise voiced frames 0/375
+Vibrato control-domain span natural/hard: 0.48394 / 0.27517 st
+Note transition delays low/high: 23.9792 / 114.646 ms
+Rendered 5 Hz vibrato 5th-95th percentile span natural/hard: 0.401888 / 0.0698895 st
+PASS: correction detector, scales, vibrato, retune, state, rendered pitch, buffers and allocations

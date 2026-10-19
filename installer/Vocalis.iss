@@ -1,8 +1,12 @@
-﻿#define ProductName "Vocalis"
-#define ProductVersion "1.0.0"
+#define ProductName "Vocalis"
+#ifndef ProductVersion
+  #error "Use BuildInstaller.ps1 to supply the CMake product version and validate tests."
+#endif
 #define Publisher "Vocalis Audio"
 #define ProjectRoot AddBackslash(SourcePath) + ".."
-#define BundleSource ProjectRoot + "\build\Vocalis_artefacts\Release\VST3\Vocalis.vst3"
+#ifndef BundleSource
+  #error "Use BuildInstaller.ps1 to supply the validated bundle."
+#endif
 #define OutputName ProductName + "-" + ProductVersion + "-Setup"
 
 [Setup]
@@ -48,6 +52,7 @@ Source: "{#ProjectRoot}\THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignore
 Source: "{#ProjectRoot}\LICENSES\*"; DestDir: "{app}\LICENSES"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#ProjectRoot}\docs\ReleaseChecklist.md"; DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "{#ProjectRoot}\docs\ReleaseCandidate.md"; DestDir: "{app}\docs"; Flags: ignoreversion
+Source: "{#ProjectRoot}\docs\CurrentAudit.md"; DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "{#ProjectRoot}\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 [InstallDelete]
@@ -67,5 +72,5 @@ Type: dirifempty; Name: "{app}"
 Filename: "{sys}\notepad.exe"; Parameters: """{app}\README.md"""; Description: "Open the Vocalis README"; Flags: postinstall unchecked nowait skipifsilent runasoriginaluser
 
 [Messages]
-WelcomeLabel2=This installs Vocalis 1.0.0 for Windows x64 VST3 hosts.%n%nClose FL Studio and all other audio hosts first.%n%nMicrosoft Visual C++ v14 x64 Redistributable is required. Setup does not download or install it.%n%nClick Next to review prerequisites.
+WelcomeLabel2=This installs Vocalis {#ProductVersion} for Windows x64 VST3 hosts.%n%nClose FL Studio and all other audio hosts first.%n%nMicrosoft Visual C++ v14 x64 Redistributable is required. Setup does not download or install it.%n%nClick Next to review prerequisites.
 

@@ -22,6 +22,7 @@ void runFormantTests();
 void runFormantBenchmark();
 void runLatencyBenchmark(const juce::String& filter);
 void runLatencyTests();
+void runAuditBenchmark();
 void runHostedPitchTest(juce::AudioProcessor&);
 
 namespace
@@ -59,6 +60,7 @@ int main(int argc, char** argv)
     juce::ScopedJuceInitialiser_GUI juceInitialiser;
     try
     {
+        if (argc > 1 && juce::String(argv[1]) == "--audit-benchmark") { runAuditBenchmark(); return 0; }
         if (argc > 1 && juce::String(argv[1]) == "--vocal-focused") { runVocalFocusedTests(); return 0; }
         if (argc > 1 && juce::String(argv[1]) == "--vocal-qa") { runVocalValidation(); return 0; }
         if (argc > 1 && juce::String(argv[1]) == "--active-cpu") { runLiveActiveCpu(); return 0; }

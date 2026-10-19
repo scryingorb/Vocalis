@@ -29,8 +29,80 @@ double frequency(const std::vector<float>& audio, double rate)
         }
     return count > 2 ? (count - 1) * rate / (last - first) : 0;
 }
+void detectorRangeTests()
+{
+    // Exercise every steady update: testing only the final frame misses
+    // sample-rate-dependent dropouts at the inclusive detector endpoints.
+    for (double rate : {44100., 48000., 88200., 96000.})
+        for (auto profile : {PitchDetector::Profile::balanced, PitchDetector::Profile::fastExperimental})
+            for (double hz : {64., 65., 65.1, 1099., 1100., 1110.})
+                for (bool harmonic : {false, true})
+                {
+                    PitchDetector detector; detector.prepare(rate, profile);
+                    int updates = 0;
+                    for (int i = 0; i < static_cast<int>(rate * .4); ++i)
+                    {
+                        const double phase = tau * hz * i / rate;
+                        const float sample = static_cast<float>(.1 * (std::sin(phase)
+                            + (harmonic ? .3 * std::sin(2 * phase) : 0)));
+                        if (!detector.processSample(sample) || i < static_cast<int>(rate * .2)) continue;
+                        ++updates;
+                        const auto result = detector.result();
+                        if (hz < 65 || hz > 1100)
+                            check(result.hz == 0, "Detector accepted a tone beyond its boundary tolerance");
+                        else
+                        {
+                            check(result.confidence > .85f && result.hz >= 65 && result.hz <= 1100,
+                                  "Detector dropped a supported range endpoint");
+                            check(std::abs(1200 * std::log2(result.hz / hz)) < 10,
+                                  "Detector range endpoint pitch error");
+                        }
+                    }
+                    check(updates > 20, "Insufficient detector boundary observations");
+                }
+    std::cout << "PASS: detector endpoints, adjacent pitches and outside-range rejection in both profiles\n";
+}
 void detectorTests()
 {
+    detectorRangeTests();
+    for (double rate : {44100.,48000.,96000.})
+        for (double hz : {80.,110.,150.,220.})
+            for (double second : {0.,1.,4.,8.})
+            {
+                PitchDetector detector;detector.prepare(rate);
+                int voiced=0,updates=0;
+                for(int i=0;i<int(rate*.6);++i)
+                {
+                    const double phase=tau*hz*i/rate;
+                    const float x=float(.1/(1+second)*(std::sin(phase)+second*std::sin(2*phase)));
+                    if(!detector.processSample(x)||i<int(rate*.2))continue;
+                    ++updates;
+                    const auto result=detector.result();
+                    if(result.hz>0&&std::abs(1200*std::log2(result.hz/hz))<10)++voiced;
+                }
+                check(voiced==updates&&updates>20,"Dominant harmonic caused octave error or dropout");
+            }
+    // Breathy voiced input, consonant-like noise and genuine octave transitions:
+    // periodicity improvements must not create voiced noise or hold the old octave.
+    for(double rate:{44100.,48000.,96000.})
+    {
+        PitchDetector detector;detector.prepare(rate);juce::Random random(712);
+        for(double hz:{220.,440.,0.,110.})
+        {
+            int observed=0,correct=0;
+            for(int i=0;i<int(rate*.4);++i)
+            {
+                const float noise=(random.nextFloat()-.5f)*float(hz>0?.06:.2);
+                const float sample=noise+float(hz>0?.1*std::sin(tau*hz*i/rate):0);
+                if(!detector.processSample(sample)||i<int(rate*.2))continue;
+                ++observed;
+                const auto result=detector.result();
+                if(hz==0?result.hz==0:(result.hz>0&&std::abs(1200*std::log2(result.hz/hz))<15))++correct;
+            }
+            check(observed>20&&correct>=observed*.95,"Breathy/noise/octave-transition tracking regression");
+        }
+    }
+    std::cout<<"PASS: dominant harmonics, breathy fixtures, unvoiced noise and genuine octave transitions\n";
     double worst = 0;
     for (double rate : {44100., 48000., 96000.})
         for (double hz : {75., 110., 220., 440., 880.})
@@ -114,7 +186,7 @@ std::vector<float> render(double rate, int channels, float amount, int key, int 
     set(p,ParameterIDs::key,float(key));set(p,ParameterIDs::scale,float(scale));
     set(p,ParameterIDs::formantPreserve,0); // pure-tone pitch oracle, without envelope attenuation
     set(p,ParameterIDs::pitch,manual);p.prepareToPlay(rate,64);
-    check(p.getLatencySamples()==int(rate*.048)+64,"Correction changed reported delay");
+    check(p.getLatencySamples()==int(rate*.048)+(rate>=88200?int(rate*.003):0)+64,"Correction changed reported delay");
     const int length=int(rate*1.4);std::vector<float> out(static_cast<size_t>(length));
     juce::AudioBuffer<float> buffer(channels,1024);juce::MidiBuffer midi;
     int block=0;const int sizes[]={1,17,64,127,511,1024};

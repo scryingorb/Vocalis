@@ -11,7 +11,9 @@ void PitchDetector::prepare(double sampleRate, Profile profile) noexcept
     decimation = std::max(1, static_cast<int>(std::ceil(sampleRate / 12000.0)));
     analysisRate = sampleRate / decimation;
     minLag = std::max(2, static_cast<int>(analysisRate / 1100.0));
-    maxLag = std::min(capacity - window - 2, static_cast<int>(std::ceil(analysisRate / 65.0)));
+    // Retain neighbours beyond the lowest supported period so its valley and
+    // parabolic interpolation are not truncated at the search boundary.
+    maxLag = std::min(capacity - window - 2, static_cast<int>(std::ceil(analysisRate / 65.0)) + 2);
     filterCoefficient = static_cast<float>(1 - std::exp(-6.283185307179586 * 1800 / sampleRate));
     reset();
 }
@@ -65,11 +67,43 @@ void PitchDetector::analyse() noexcept
         if (normalized[static_cast<size_t>(lag)] >= 0.15f) continue;
         while (lag + 1 < maxLag && normalized[static_cast<size_t>(lag + 1)] < normalized[static_cast<size_t>(lag)]) ++lag;
         if (lag >= maxLag) return;
+        // A dominant second harmonic can make a half-period valley pass YIN's
+        // threshold. Prefer the full period only when it explains substantially
+        // more of the waveform. Pure tones already have a near-zero first valley
+        // and must never be arbitrarily shifted down an octave.
+        const auto valleyScore = [this](int index)
+        {
+            const float a=difference[static_cast<size_t>(index-1)],b=difference[static_cast<size_t>(index)],c=difference[static_cast<size_t>(index+1)];
+            const float curvature=a-2*b+c;
+            const float offset=curvature>1e-20f?std::clamp(.5f*(a-c)/curvature,-.5f,.5f):0;
+            // Remove integer-lag sampling error before comparing periodicity.
+            // Otherwise a high pure tone with a fractional period can look more
+            // periodic at twice its period and be incorrectly halved.
+            return b>1e-20f?normalized[static_cast<size_t>(index)]*std::max(0.0f,b-.25f*(a-c)*offset)/b:0.0f;
+        };
+        const float firstScore=valleyScore(lag);
+        // Restrict disambiguation to low/mid vocals: at high frequencies the
+        // decimated waveform cannot reliably distinguish interpolation error
+        // from evidence of a missing fundamental. Keep the original YIN choice.
+        if (analysisRate / lag <= 600.0 && firstScore > 0.01f && 2 * lag + 2 < maxLag)
+        {
+            int fullPeriod = 2 * lag;
+            for (int candidate = 2 * lag - 2; candidate <= 2 * lag + 2; ++candidate)
+                if (valleyScore(candidate) < valleyScore(fullPeriod))
+                    fullPeriod = candidate;
+            if (valleyScore(fullPeriod) < 0.2f * firstScore)
+                lag = fullPeriod;
+        }
         const float a = difference[static_cast<size_t>(lag - 1)], b = difference[static_cast<size_t>(lag)], c = difference[static_cast<size_t>(lag + 1)];
         const float denominator = a - 2 * b + c;
         const float offset = denominator > 1e-20f ? std::clamp(0.5f * (a - c) / denominator, -0.5f, 0.5f) : 0;
         const float hz = static_cast<float>(analysisRate / (lag + offset));
-        if (hz >= 65 && hz <= 1100) current = {hz, 1 - normalized[static_cast<size_t>(lag)]};
+        // Interpolation can overshoot an inclusive endpoint by a few cents,
+        // depending on the decimated rate. Allow less than nine cents of edge
+        // error, then keep the published output range at 65-1100 Hz.
+        constexpr float boundaryTolerance = 1.005f;
+        if (hz >= 65 / boundaryTolerance && hz <= 1100 * boundaryTolerance)
+            current = {std::clamp(hz, 65.0f, 1100.0f), 1 - normalized[static_cast<size_t>(lag)]};
         return;
     }
 }

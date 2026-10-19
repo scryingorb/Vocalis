@@ -94,7 +94,7 @@ if(VOCALIS_BUILD_TESTS)
     juce_add_console_app(VocalisTests PRODUCT_NAME "Vocalis Tests")
     # ULTRA research code is intentionally test-only until quality/latency gates pass.
     target_sources(VocalisTests PRIVATE Tests/ProcessorTests.cpp Tests/PitchTests.cpp
-        Tests/LatencyBenchmark.cpp Tests/LatencyTests.cpp Tests/FormantTests.cpp Tests/CorrectionTests.cpp Tests/HumanizerTests.cpp Tests/PresetTests.cpp Tests/UiTests.cpp Tests/StabilityTests.cpp Tests/LiveStudy.cpp Tests/UltraLiveTests.cpp Source/dsp/live/UltraLiveEngine.cpp Tests/VocalValidation.cpp Tests/reference/Phase11UltraLiveEngine.cpp)
+        Tests/LatencyBenchmark.cpp Tests/AuditBenchmark.cpp Tests/LatencyTests.cpp Tests/FormantTests.cpp Tests/CorrectionTests.cpp Tests/HumanizerTests.cpp Tests/PresetTests.cpp Tests/UiTests.cpp Tests/StabilityTests.cpp Tests/LiveStudy.cpp Tests/UltraLiveTests.cpp Source/dsp/live/UltraLiveEngine.cpp Tests/VocalValidation.cpp Tests/reference/Phase11UltraLiveEngine.cpp)
     target_compile_definitions(VocalisTests PRIVATE JUCE_PLUGINHOST_VST3=1)
     target_link_libraries(VocalisTests PRIVATE Vocalis juce::juce_audio_utils signalsmith-stretch)
     add_dependencies(VocalisTests Vocalis_VST3)

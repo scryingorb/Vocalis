@@ -4,7 +4,7 @@ Build with Inno Setup 6.3 or newer. No compiler or runtime is downloaded by the
 helper. Install Inno Setup manually from https://jrsoftware.org/isdl.php, then:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File installer/BuildInstaller.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File installer/BuildInstaller.ps1 -BuildDirectory build/audit -OutputDirectory build/audit/installer-review
 # Or specify an existing compiler:
 # ... -IsccPath 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
 ```
@@ -13,11 +13,18 @@ Stable AppId: **745846CB-3E2F-4EB3-9D76-6B6B3469742A**. Keep this identifier for
 future Vocalis installer upgrades. It is separate from plugin/VST3 identifiers.
 Output: `dist/Vocalis-1.0.0-Setup.exe`.
 
-The plugin is copied from the current Release build, including the embedded logo.
-No CMake/plugin build or modification occurs. The existing distribution ZIP
-predates the logo update; it is deliberately not rebuilt by this packaging task.
-The helper updates hashes for the actual existing ZIP and newly compiled EXE,
-retaining other checksum entries.
+`dist` remains the default output directory. Existing EXEs are never overwritten;
+choose a fresh review directory as above. `-CTestPath` selects an existing CTest
+tool if needed. The helper now runs the current Release regression, validates
+the entire bundle's hashes before/after testing and compilation, and derives the
+installer version from CMake. Invoke the helper rather than compiling `.iss`
+directly. Compilation does not install the plugin or validate upgrade/uninstall.
+
+The plugin is copied from the selected Release build, including the embedded
+logo. No CMake/plugin build or modification occurs. The helper runs the current
+regression before compilation and updates the newly compiled EXE's checksum,
+retaining unrelated entries. Existing distribution ZIPs and EXEs are unchanged
+when a separate review output directory is selected.
 
 ## Paths and scope review
 

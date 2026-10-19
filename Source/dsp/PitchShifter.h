@@ -15,7 +15,7 @@ public:
         bool splitComputation = false;
         bool linkedStereo = true;
     };
-    static Configuration configurationFor(Mode) noexcept;
+    static Configuration configurationFor(Mode, double sampleRate = 48000.0) noexcept;
     PitchShifter();
     ~PitchShifter();
     // Configuration changes are preparation-only, never automatable in process().

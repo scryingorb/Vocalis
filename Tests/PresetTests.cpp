@@ -47,7 +47,7 @@ std::vector<float> source(double rate,double hz)
 std::vector<float> render(double rate,int channels,size_t preset,const std::vector<float>& input,bool variable=true)
 {
     VocalisAudioProcessor p;p.presets.apply(preset);p.setPlayConfigDetails(channels,channels,rate,64);p.prepareToPlay(rate,64);
-    check(p.getLatencySamples()==int(rate*.048)+64,"Preset changed reported latency");
+    check(p.getLatencySamples()==int(rate*.048)+(rate>=88200?int(rate*.003):0)+64,"Preset changed reported latency");
     std::vector<float> out(input.size());juce::AudioBuffer<float> buffer(channels,1024);juce::MidiBuffer midi;int block=0;
     const int sizes[]={1,17,64,127,511,1024};
     for(int pos=0;pos<int(input.size());)

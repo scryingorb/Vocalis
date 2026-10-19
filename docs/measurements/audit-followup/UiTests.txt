@@ -1,0 +1,2 @@
+SKIP: historical Phase 7 binary comparison (baseline bundle absent)
+PASS: resize layouts and Pitch Orb

@@ -1,0 +1,1 @@
+PASS: unchanged bundle accepted; modified/added resources and failed regression rejected
